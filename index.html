@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chapri Detector</title>
+  <link rel="stylesheet" href="static/style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1 class="title">🧠 Chapri Detector 9000</h1>
+    <p class="subtitle">Upload a selfie. We'll tell you if it's *chapri* or *not*.</p>
+
+    <div class="upload-box">
+      <input type="file" id="imageInput" />
+      <button onclick="uploadImage()">Analyze</button>
+    </div>
+
+    <div id="result" class="result-box hidden"></div>
+  </div>
+
+  <script>
+    async function uploadImage() {
+      const file = document.getElementById("imageInput").files[0];
+      if (!file) return alert("Please select an image!");
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch("/api/predict", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+      const resultBox = document.getElementById("result");
+      resultBox.innerText = data.result;
+      resultBox.classList.remove("hidden");
+    }
+  </script>
+</body>
+</html>
